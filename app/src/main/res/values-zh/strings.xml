@@ -1,0 +1,50 @@
+<resources>
+    <string name="app_name">日历钟</string>
+    <string name="month_pattern">yyyy 年 M 月</string>
+    <string name="today">今日安排</string>
+    <string name="upcoming">后续安排</string>
+    <string name="tomorrow">明天</string>
+    <string name="all_day">全天</string>
+    <string name="ongoing">正在进行</string>
+    <string name="next">接下来</string>
+    <string name="overview">今日概览</string>
+    <string name="day_done">今天的安排已结束</string>
+    <string name="free_day">留一点时间给自己</string>
+    <string name="all_day_remaining">今天还有全天安排</string>
+    <string name="empty_today">今天没有安排</string>
+    <string name="empty_upcoming">暂无后续安排</string>
+    <string name="connect_calendars">请先连接日历</string>
+    <string name="permission_needed">需要读取日历权限</string>
+    <string name="read_failed">日历暂时无法读取</string>
+    <string name="untitled">未命名日程</string>
+    <string name="calendar">日历</string>
+    <plurals name="item_count"><item quantity="other">%1$d 项</item></plurals>
+    <plurals name="more_items"><item quantity="other">另有 %1$d 项</item></plurals>
+    <string name="summary">%1$s；日历 %2$d；今日 %3$d 项；后续 %4$d 项。</string>
+    <string name="choose_calendars">选择日历</string>
+    <string name="sync_setup">日历同步</string>
+    <string name="orientation">显示方向</string>
+    <string name="system_orientation">自动</string>
+    <string name="landscape">横屏</string>
+    <string name="portrait">竖屏</string>
+    <string name="grant_access">允许读取日历</string>
+    <string name="app_settings">应用权限</string>
+    <string name="keep_displaying">继续显示</string>
+    <string name="exit">退出日历钟</string>
+    <string name="done">完成</string>
+    <string name="cancel">取消</string>
+    <string name="no_calendars">暂时没有可见的设备日历，请先通过同步应用添加日历。</string>
+    <string name="sync_help">日历钟读取安卓系统日历。iCloud 或 CalDAV 可通过 DAVx⁵ 同步；Outlook 请开启「设置 → 日历 → 同步日历」。其他能写入安卓系统日历的同步应用也可以使用。\n\nWi-Fi 只用于获取云端变更。断网时，时钟和已同步的日程仍可显示。</string>
+    <string name="open_davx">打开 DAVx⁵</string>
+    <string name="open_outlook">打开 Outlook</string>
+    <string name="account_settings">安卓账号设置</string>
+    <string name="no_sync_app">尚未安装这个同步应用。</string>
+    <string name="about">关于与电源</string>
+    <string name="about_body">本地、只读的日历展示应用。仅申请读取日历权限，不保存账号密码，不连接网络。\n\n应用在前台时持续显示，支持电池供电；退出后恢复系统休眠。按电源键休眠后会停止走时，续航取决于设备。\n\nBOOX 用户请解冻日历钟及同步应用，并将日历钟的「优化 → 其它 → 后台持续运行」设为「持续运行」，不同固件名称可能不同。需要时请手动关闭前光。重启后需重新打开日历钟。</string>
+    <string name="demo_reading">阅读时间</string>
+    <string name="demo_walk">傍晚散步</string>
+    <string name="demo_workshop">社区工作坊</string>
+    <string name="demo_lunch">和朋友吃午饭</string>
+    <string name="demo_library">去图书馆</string>
+    <string name="demo_source">个人日历</string>
+</resources>

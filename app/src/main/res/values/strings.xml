@@ -1,0 +1,50 @@
+<resources>
+    <string name="app_name">Calendar Clock</string>
+    <string name="month_pattern">MMMM yyyy</string>
+    <string name="today">Today</string>
+    <string name="upcoming">Upcoming</string>
+    <string name="tomorrow">Tomorrow</string>
+    <string name="all_day">All day</string>
+    <string name="ongoing">Now</string>
+    <string name="next">Up next</string>
+    <string name="overview">Today</string>
+    <string name="day_done">That’s everything for today</string>
+    <string name="free_day">Make room for yourself</string>
+    <string name="all_day_remaining">All-day plans today</string>
+    <string name="empty_today">Nothing planned today</string>
+    <string name="empty_upcoming">No upcoming plans</string>
+    <string name="connect_calendars">Connect a calendar to get started</string>
+    <string name="permission_needed">Calendar access is needed</string>
+    <string name="read_failed">Calendars are temporarily unavailable</string>
+    <string name="untitled">Untitled event</string>
+    <string name="calendar">Calendar</string>
+    <plurals name="item_count"><item quantity="one">%1$d event</item><item quantity="other">%1$d events</item></plurals>
+    <plurals name="more_items"><item quantity="one">%1$d more</item><item quantity="other">%1$d more</item></plurals>
+    <string name="summary">%1$s. Calendars: %2$d; today: %3$d; upcoming: %4$d.</string>
+    <string name="choose_calendars">Choose calendars</string>
+    <string name="sync_setup">Calendar sync</string>
+    <string name="orientation">Orientation</string>
+    <string name="system_orientation">Automatic</string>
+    <string name="landscape">Landscape</string>
+    <string name="portrait">Portrait</string>
+    <string name="grant_access">Allow calendar access</string>
+    <string name="app_settings">App permissions</string>
+    <string name="keep_displaying">Keep displaying</string>
+    <string name="exit">Exit clock</string>
+    <string name="done">Done</string>
+    <string name="cancel">Cancel</string>
+    <string name="no_calendars">No visible device calendars yet. Set up a sync app first.</string>
+    <string name="sync_help">Calendar Clock reads Android’s device calendars. For iCloud or CalDAV, use DAVx⁵. In Outlook, enable Settings → Calendar → Sync calendars. Other apps that populate Android calendars also work.\n\nWi-Fi is only needed for new cloud changes. Cached events and the clock work offline.</string>
+    <string name="open_davx">Open DAVx⁵</string>
+    <string name="open_outlook">Open Outlook</string>
+    <string name="account_settings">Android accounts</string>
+    <string name="no_sync_app">That sync app is not installed.</string>
+    <string name="about">About and power</string>
+    <string name="about_body">A local, read-only calendar display. Only calendar read permission is requested; no account passwords or network access.\n\nThe screen stays awake while this app is in the foreground, including on battery. Exit to restore normal sleep. Pressing the power button stops the live display. Battery life depends on your device.\n\nOn BOOX, unfreeze the clock and sync apps. For the clock, set App optimization → Other → Background activity to “Always run” (wording varies by firmware). Turn off the frontlight manually if desired. Reopen the clock after restarting the device.</string>
+    <string name="demo_reading">Reading time</string>
+    <string name="demo_walk">Evening walk</string>
+    <string name="demo_workshop">Community workshop</string>
+    <string name="demo_lunch">Lunch with friends</string>
+    <string name="demo_library">Library visit</string>
+    <string name="demo_source">Personal</string>
+</resources>
