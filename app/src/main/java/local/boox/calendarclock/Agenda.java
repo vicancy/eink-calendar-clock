@@ -32,13 +32,19 @@ final class Agenda {
     static final class Event {
         final String title;
         final String source;
+        final String calendarId;
         final long begin;
         final long end;
         final boolean allDay;
 
         Event(String title, String source, long begin, long end, boolean allDay) {
+            this(title, source, begin, end, allDay, source);
+        }
+
+        Event(String title, String source, long begin, long end, boolean allDay, String calendarId) {
             this.title = title;
             this.source = source;
+            this.calendarId = calendarId;
             this.begin = begin;
             this.end = end;
             this.allDay = allDay;

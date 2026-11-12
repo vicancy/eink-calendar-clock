@@ -41,6 +41,8 @@ public final class CalendarActivity extends Activity {
     private long lastLoad;
     private final Runnable changed = this::load;
     private final Runnable minute = this::tick;
+    private final Runnable renewDisplay = this::renewDisplay;
+    private final Runnable holdDisplay = this::holdDisplay;
     private final ContentObserver observer = new ContentObserver(handler) {
         @Override public void onChange(boolean selfChange) {
             if (resumed) { handler.removeCallbacks(changed); handler.postDelayed(changed, 500); }
@@ -96,7 +98,7 @@ public final class CalendarActivity extends Activity {
         super.onResume();
         resumed = true;
         immersive();
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        holdDisplay();
         observeIfAllowed();
         load();
         scheduleMinute();
@@ -106,6 +108,8 @@ public final class CalendarActivity extends Activity {
         resumed = false;
         handler.removeCallbacks(minute);
         handler.removeCallbacks(changed);
+        handler.removeCallbacks(renewDisplay);
+        handler.removeCallbacks(holdDisplay);
         if (observing) { getContentResolver().unregisterContentObserver(observer); observing = false; }
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         super.onPause();
@@ -115,6 +119,24 @@ public final class CalendarActivity extends Activity {
         handler.removeCallbacksAndMessages(null);
         unregisterReceiver(timeChanged);
         super.onDestroy();
+    }
+
+    private void holdDisplay() {
+        if (!resumed) return;
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        // BOOX can expire WindowManager's lock even with "keep running" enabled.
+        if ("ONYX".equalsIgnoreCase(Build.MANUFACTURER)) {
+            handler.removeCallbacks(renewDisplay);
+            handler.postDelayed(renewDisplay, 60_000);
+        }
+    }
+
+    private void renewDisplay() {
+        if (!resumed) return;
+        // Allow separate window traversals so the system releases and reacquires
+        // the lock. Its ON_AFTER_RELEASE flag keeps the display on in this gap.
+        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        handler.postDelayed(holdDisplay, 250);
     }
 
     @Override public void onWindowFocusChanged(boolean focused) {

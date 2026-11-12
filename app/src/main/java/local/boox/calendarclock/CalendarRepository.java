@@ -69,13 +69,13 @@ final class CalendarRepository {
             ContentUris.appendId(uri, from);
             ContentUris.appendId(uri, to);
             try (Cursor cursor = context.getContentResolver().query(uri.build(),
-                    new String[]{"title", "calendar_displayName", "begin", "end", "allDay"},
+                    new String[]{"title", "calendar_displayName", "begin", "end", "allDay", "calendar_id"},
                     selection.toString(), args.toArray(new String[0]), "begin ASC, end ASC, title ASC")) {
                 while (cursor != null && cursor.moveToNext()) {
                     String title = cursor.getString(0);
                     Agenda.Event event = new Agenda.Event(
                             title == null || title.trim().isEmpty() ? context.getString(R.string.untitled) : title,
-                            cursor.getString(1), cursor.getLong(2), cursor.getLong(3), cursor.getInt(4) != 0);
+                            cursor.getString(1), cursor.getLong(2), cursor.getLong(3), cursor.getInt(4) != 0, cursor.getString(5));
                     if (window.isToday(event)) result.today.add(event);
                     if (window.isUpcoming(event)) result.upcoming.add(event);
                 }

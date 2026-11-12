@@ -23,6 +23,10 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.TextStyle;
 import java.util.Locale;
 import java.util.TimeZone;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 final class ClockFace extends View {
     private static final int INK = Color.BLACK;
@@ -205,37 +209,67 @@ final class ClockFace extends View {
             text(canvas, s(R.string.upcoming), 36, box.left, top + 26, true, INK);
             top += 70;
         }
+        Map<String, List<Agenda.Event>> byCalendar = new LinkedHashMap<>();
+        for (Agenda.Event event : agenda.upcoming) {
+            byCalendar.computeIfAbsent(event.calendarId, key -> new ArrayList<>()).add(event);
+        }
+        List<List<Agenda.Event>> groups = new ArrayList<>(byCalendar.values());
+        int visibleGroups = Math.min(groups.size(), columns * Math.max(1, (int) ((box.bottom - top) / 240)));
         int shown = 0;
-        LocalDate tomorrow = now.toLocalDate().plusDays(1);
         for (int column = 0; column < columns; column++) {
             float x = box.left + column * (width + gap);
             float y = top;
-            while (shown < agenda.upcoming.size()) {
-                Agenda.Event event = agenda.upcoming.get(shown);
-                StaticLayout title = paragraph(event.title, 28, width, 2, true, INK);
-                float row = 34 + title.getHeight() + 18;
-                if (y + row > box.bottom - 20) break;
-                LocalDate beginDate = event.startDate(now.getZone());
-                LocalDate date = beginDate.isBefore(tomorrow) ? tomorrow : beginDate;
-                String pattern = date.getYear() == now.getYear() ? "M/d" : "yyyy/M/d";
-                String day = date.equals(tomorrow) ? s(R.string.tomorrow)
-                        : date.format(DateTimeFormatter.ofPattern(pattern, locale())) + " "
-                        + date.getDayOfWeek().getDisplayName(TextStyle.SHORT, locale());
-                String label = day + " · " + (event.allDay ? s(R.string.all_day)
-                        : beginDate.isBefore(tomorrow) ? s(R.string.ongoing) : time(event.begin, now.getZone()));
-                // Each StaticLayout shares this view's paint; restore its font before drawing it.
-                paragraph(canvas, label, 24, x, y, width, 1, false, MUTED);
-                font(28, true, INK);
-                drawParagraph(canvas, title, x, y + 34);
-                shown++;
-                if (shown < agenda.upcoming.size()) rule(canvas, x, x + width, y + row - 7, RULE);
-                y += row;
+            if (groups.size() == 1) {
+                if (shown < groups.get(0).size()) shown += drawUpcomingGroup(canvas, groups.get(0), shown,
+                        x, y, width, box.bottom, now, column == columns - 1);
+                continue;
+            }
+            int remaining = (visibleGroups - column + columns - 1) / columns;
+            for (int group = column; group < visibleGroups; group += columns) {
+                float bottom = y + (box.bottom - y) / remaining--;
+                drawUpcomingGroup(canvas, groups.get(group), 0, x, y, width, bottom, now, true);
+                y = bottom;
             }
         }
         if (agenda.upcoming.isEmpty()) paragraph(canvas,
                 s(agenda.errorMessage == 0 ? R.string.empty_upcoming : agenda.errorMessage),
                 28, box.left, top, box.width(), 2, false, MUTED);
-        if (agenda.upcoming.size() > shown) text(canvas, q(R.plurals.more_items, agenda.upcoming.size() - shown),
+        int hidden = 0;
+        for (int group = visibleGroups; group < groups.size(); group++) hidden += groups.get(group).size();
+        if (hidden > 0) text(canvas, q(R.plurals.more_items, hidden),
                 24, box.left, box.bottom + 30, false, MUTED);
+    }
+
+    private int drawUpcomingGroup(Canvas canvas, List<Agenda.Event> events, int start, float x,
+                                  float top, float width, float bottom, ZonedDateTime now, boolean showRemaining) {
+        String source = events.get(0).source;
+        paragraph(canvas, source == null || source.isEmpty() ? s(R.string.calendar) : source,
+                32, x, top, width, 1, true, INK);
+        rule(canvas, x, x + width, top + 43, INK);
+        float y = top + 58;
+        int index = start;
+        LocalDate tomorrow = now.toLocalDate().plusDays(1);
+        while (index < events.size()) {
+            Agenda.Event event = events.get(index);
+            StaticLayout title = paragraph(event.title, 28, width, 2, true, INK);
+            float row = 34 + title.getHeight() + 18;
+            if (y + row > bottom - 42) break;
+            LocalDate beginDate = event.startDate(now.getZone());
+            LocalDate date = beginDate.isBefore(tomorrow) ? tomorrow : beginDate;
+            String pattern = date.getYear() == now.getYear() ? "M/d" : "yyyy/M/d";
+            String day = date.equals(tomorrow) ? s(R.string.tomorrow)
+                    : date.format(DateTimeFormatter.ofPattern(pattern, locale())) + " "
+                    + date.getDayOfWeek().getDisplayName(TextStyle.SHORT, locale());
+            String label = day + " · " + (event.allDay ? s(R.string.all_day)
+                    : beginDate.isBefore(tomorrow) ? s(R.string.ongoing) : time(event.begin, now.getZone()));
+            paragraph(canvas, label, 24, x, y, width, 1, false, MUTED);
+            font(28, true, INK);
+            drawParagraph(canvas, title, x, y + 34);
+            index++;
+            y += row;
+        }
+        if (showRemaining && index < events.size()) text(canvas, q(R.plurals.more_items, events.size() - index),
+                23, x, y + 18, false, MUTED);
+        return index - start;
     }
 }

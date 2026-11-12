@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">日历钟</string>
+    <string name="app_name">朝夕</string>
     <string name="month_pattern">yyyy 年 M 月</string>
     <string name="today">今日安排</string>
     <string name="upcoming">后续安排</string>
@@ -30,21 +30,22 @@
     <string name="grant_access">允许读取日历</string>
     <string name="app_settings">应用权限</string>
     <string name="keep_displaying">继续显示</string>
-    <string name="exit">退出日历钟</string>
+    <string name="exit">退出朝夕</string>
     <string name="done">完成</string>
     <string name="cancel">取消</string>
     <string name="no_calendars">暂时没有可见的设备日历，请先通过同步应用添加日历。</string>
-    <string name="sync_help">日历钟读取安卓系统日历。iCloud 或 CalDAV 可通过 DAVx⁵ 同步；Outlook 请开启「设置 → 日历 → 同步日历」。其他能写入安卓系统日历的同步应用也可以使用。\n\nWi-Fi 只用于获取云端变更。断网时，时钟和已同步的日程仍可显示。</string>
+    <string name="sync_help">朝夕读取安卓系统日历。iCloud 或 CalDAV 可通过 DAVx⁵ 同步；Outlook 请开启「设置 → 日历 → 同步日历」。其他能写入安卓系统日历的同步应用也可以使用。\n\nWi-Fi 只用于获取云端变更。断网时，时钟和已同步的日程仍可显示。</string>
     <string name="open_davx">打开 DAVx⁵</string>
     <string name="open_outlook">打开 Outlook</string>
     <string name="account_settings">安卓账号设置</string>
     <string name="no_sync_app">尚未安装这个同步应用。</string>
     <string name="about">关于与电源</string>
-    <string name="about_body">本地、只读的日历展示应用。仅申请读取日历权限，不保存账号密码，不连接网络。\n\n应用在前台时持续显示，支持电池供电；退出后恢复系统休眠。按电源键休眠后会停止走时，续航取决于设备。\n\nBOOX 用户请解冻日历钟及同步应用，并将日历钟的「优化 → 其它 → 后台持续运行」设为「持续运行」，不同固件名称可能不同。需要时请手动关闭前光。重启后需重新打开日历钟。</string>
+    <string name="about_body">本地、只读的日历展示应用。仅申请读取日历权限，不保存账号密码，不连接网络。\n\n应用在前台时持续显示，支持电池供电；退出后恢复系统休眠。按电源键休眠后会停止走时，续航取决于设备。\n\nBOOX 用户请解冻朝夕及同步应用，并将朝夕的「优化 → 其它 → 后台持续运行」设为「持续运行」，不同固件名称可能不同。需要时请手动关闭前光。重启后需重新打开朝夕。</string>
     <string name="demo_reading">阅读时间</string>
     <string name="demo_walk">傍晚散步</string>
     <string name="demo_workshop">社区工作坊</string>
     <string name="demo_lunch">和朋友吃午饭</string>
     <string name="demo_library">去图书馆</string>
     <string name="demo_source">个人日历</string>
+    <string name="demo_family_source">家庭日历</string>
 </resources>

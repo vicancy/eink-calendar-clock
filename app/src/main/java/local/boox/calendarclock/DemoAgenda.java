@@ -10,12 +10,14 @@ final class DemoAgenda {
 
     static Agenda create(Context context) {
         Agenda result = new Agenda(NOW.toLocalDate(), NOW.getZone());
-        result.selectedCalendarCount = 1;
+        result.selectedCalendarCount = 2;
         String source = context.getString(R.string.demo_source);
+        String family = context.getString(R.string.demo_family_source);
         result.today.add(event(context.getString(R.string.demo_reading), source, 0, 9));
         result.today.add(event(context.getString(R.string.demo_walk), source, 0, 18));
         int[] titles = {R.string.demo_workshop, R.string.demo_lunch, R.string.demo_library};
-        for (int i = 0; i < 18; i++) result.upcoming.add(event(context.getString(titles[i % titles.length]), source, i + 1, 11 + i % 5));
+        for (int i = 0; i < 18; i++) result.upcoming.add(event(context.getString(titles[i % titles.length]),
+                i % 2 == 0 ? source : family, i + 1, 11 + i % 5));
         return result;
     }
 

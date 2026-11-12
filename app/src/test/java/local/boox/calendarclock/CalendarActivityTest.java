@@ -3,6 +3,7 @@ package local.boox.calendarclock;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.os.Looper;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -14,15 +15,41 @@ import org.robolectric.RuntimeEnvironment;
 import org.robolectric.android.controller.ActivityController;
 import org.robolectric.annotation.Config;
 import org.robolectric.annotation.GraphicsMode;
+import org.robolectric.shadows.ShadowBuild;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.time.Duration;
+import static org.robolectric.Shadows.shadowOf;
 import static org.junit.Assert.*;
 
 @RunWith(org.robolectric.RobolectricTestRunner.class)
 @Config(sdk = 28)
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
 public class CalendarActivityTest {
+    @Test public void booxRenewsDisplayForTwoHoursAndCancelsRenewalOnPause() {
+        ShadowBuild.setManufacturer("ONYX");
+        Intent intent = new Intent(RuntimeEnvironment.getApplication(), CalendarActivity.class)
+                .putExtra("preview", true);
+        ActivityController<CalendarActivity> controller = Robolectric.buildActivity(CalendarActivity.class, intent);
+        try {
+            CalendarActivity activity = controller.create().start().resume().visible().get();
+            for (int i = 0; i < 120; i++) {
+                shadowOf(Looper.getMainLooper()).idleFor(Duration.ofMinutes(1));
+                assertEquals(0, activity.getWindow().getAttributes().flags & WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+                shadowOf(Looper.getMainLooper()).idleFor(Duration.ofMillis(250));
+                assertTrue((activity.getWindow().getAttributes().flags & WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON) != 0);
+            }
+            shadowOf(Looper.getMainLooper()).idleFor(Duration.ofMinutes(1));
+            controller.pause();
+            shadowOf(Looper.getMainLooper()).idleFor(Duration.ofMinutes(2));
+            assertEquals(0, activity.getWindow().getAttributes().flags & WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+            controller.resume();
+            assertTrue((activity.getWindow().getAttributes().flags & WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON) != 0);
+            controller.pause().stop().destroy();
+        } finally { controller.close(); }
+    }
+
     @Test public void landscapePreviewAndForegroundPowerLifecycle() throws Exception {
         render("en", "landscape", 1248, 936, "landscape.png");
     }
