@@ -17,10 +17,13 @@ The date and clock sit beside today's agenda and a compact list of upcoming even
 - Calendar selection and automatic, landscape, or portrait orientation.
 - Upcoming groups share the available space and show their own remaining-event counts. Calendars without upcoming events are omitted.
 - Minute-aligned clock updates. Calendar changes refresh automatically, with a periodic fallback.
+- A pixel cat and dog quietly share the display: resting, doing their own thing, reading, playing ball, and occasionally tussling.
 - Offline display of cached events, including on battery power.
 - One permission: **read calendars**. No network permission, passwords, account login, analytics, or calendar writes.
 
 This is a foreground display app. It keeps the screen awake while open and releases that request when you leave. Pressing the power button or entering real device sleep stops the live display. It does not start automatically after a reboot. Continuous display uses battery; runtime depends on the device and has not been benchmarked.
+
+The companions act automatically—there are no scene buttons. A short scene starts about five seconds after opening; each scene then finishes and holds still for 5–10 minutes. Weighted random choices favour quiet activities, avoid repeating an active scene immediately, and shift toward reading and sleep at night. Black-and-white pixel animation runs in brief bursts at two frames per second and stops when you leave the app.
 
 ## Connect calendars
 
@@ -82,6 +85,7 @@ flowchart LR
 | [`Agenda`](app/src/main/java/local/boox/calendarclock/Agenda.java) | Holds the calendar list, events, query window and read status in memory. |
 | [`ClockLayout`](app/src/main/java/local/boox/calendarclock/ClockLayout.java) | Defines date, today and upcoming regions for landscape and portrait. |
 | [`ClockFace`](app/src/main/java/local/boox/calendarclock/ClockFace.java) | Draws text, event status and calendar groups with uniform scaling and bounded line wrapping. |
+| [`CompanionView`](app/src/main/java/local/boox/calendarclock/CompanionView.java) / [`CompanionSchedule`](app/src/main/java/local/boox/calendarclock/CompanionSchedule.java) | Draws the bundled pixel artwork in a separate overlay and chooses scenes by time of day, independently of calendar refreshes. |
 
 The clock redraws just after each minute boundary. Calendar reads happen on resume, after a calendar selection or device time change, and when a new local day or time zone is detected. Provider notifications are debounced by 500 ms; a 15-minute fallback reload covers missed notifications. While a read is running, further requests are combined into one follow-up read. Clock redraws and BOOX power renewal run independently of these reads.
 
@@ -89,7 +93,7 @@ On `ONYX` devices, the foreground screen request is cleared about once a minute 
 
 Calendar events stay in the system provider and the app's in-memory snapshot. Only display orientation, excluded calendar IDs and permission-prompt state are saved in app preferences. Calendar read errors are displayed; the app cannot diagnose or repair upstream sync failures.
 
-Tests cover date boundaries, daylight-saving changes, all-day events, layout bounds, and foreground power behavior, including two hours of simulated BOOX renewal and cancellation during pause. Simulated time does not reproduce vendor firmware. Robolectric's native Android rendering produces English, Chinese, portrait and wide-screen previews under `app/build/outputs/previews/`.
+Tests cover date boundaries, daylight-saving changes, all-day events, layout bounds, companion scheduling and static holds, and foreground power behavior, including two hours of simulated BOOX renewal and cancellation during pause. Simulated time does not reproduce vendor firmware. Robolectric's native Android rendering produces English, Chinese, portrait and wide-screen previews under `app/build/outputs/previews/`.
 
 [Portrait preview](docs/portrait.png) · [Wide-screen preview](docs/wide-landscape.png)
 

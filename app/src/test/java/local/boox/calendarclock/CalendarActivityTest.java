@@ -73,17 +73,18 @@ public class CalendarActivityTest {
         ActivityController<CalendarActivity> controller = Robolectric.buildActivity(CalendarActivity.class, intent);
         try {
             CalendarActivity activity = controller.create().start().resume().visible().get();
-            ClockFace face = (ClockFace) ((ViewGroup) activity.findViewById(android.R.id.content)).getChildAt(0);
+            ViewGroup display = (ViewGroup) ((ViewGroup) activity.findViewById(android.R.id.content)).getChildAt(0);
+            ClockFace face = (ClockFace) display.getChildAt(0);
             assertEquals(2, face.agenda.today.size());
             assertEquals(18, face.agenda.upcoming.size());
             assertEquals(face.getContext().getString(R.string.demo_reading), face.agenda.today.get(0).title);
             assertTrue((activity.getWindow().getAttributes().flags & WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON) != 0);
-            face.measure(View.MeasureSpec.makeMeasureSpec(width, View.MeasureSpec.EXACTLY),
+            display.measure(View.MeasureSpec.makeMeasureSpec(width, View.MeasureSpec.EXACTLY),
                     View.MeasureSpec.makeMeasureSpec(height, View.MeasureSpec.EXACTLY));
-            face.layout(0, 0, width, height);
+            display.layout(0, 0, width, height);
             Bitmap image = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
             try {
-                face.draw(new Canvas(image));
+                display.draw(new Canvas(image));
                 assertTrue(face.getContentDescription().toString().contains("2026-05-12"));
                 File directory = new File(System.getProperty("previewDir"));
                 assertTrue(directory.isDirectory() || directory.mkdirs());

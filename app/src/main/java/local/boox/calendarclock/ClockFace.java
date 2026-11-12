@@ -5,6 +5,7 @@ import android.annotation.SuppressLint;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.text.Layout;
 import android.text.StaticLayout;
@@ -97,7 +98,20 @@ final class ClockFace extends View {
         return super.onApplyWindowInsets(insets);
     }
 
-    // This static display redraws once per minute or on a data change, not every animation frame.
+    Rect companionArea() {
+        int width = getWidth() - getPaddingLeft() - getPaddingRight();
+        int height = getHeight() - getPaddingTop() - getPaddingBottom();
+        if (width <= 0 || height <= 0) return new Rect();
+        float scale = Math.min(width, height) / 1404f;
+        ClockLayout layout = new ClockLayout(width / scale, height / scale);
+        ClockLayout.Box date = layout.date;
+        float top = date.top + (layout.landscape ? 1040 : 405);
+        float right = layout.landscape ? date.right : date.left + date.width() * .52f;
+        return new Rect(getPaddingLeft() + Math.round(date.left * scale), getPaddingTop() + Math.round(top * scale),
+                getPaddingLeft() + Math.round(right * scale), getPaddingTop() + Math.round(date.bottom * scale));
+    }
+
+    // The calendar is independent of the companion overlay's animation frames.
     @SuppressLint("DrawAllocation")
     @Override protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);

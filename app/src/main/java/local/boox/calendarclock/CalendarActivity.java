@@ -23,6 +23,7 @@ import android.provider.Settings;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Toast;
+import android.widget.FrameLayout;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -36,6 +37,7 @@ public final class CalendarActivity extends Activity {
     private static final long RECHECK_MS = 15 * 60_000L;
     private final Handler handler = new Handler(Looper.getMainLooper());
     private ClockFace face;
+    private CompanionView companions;
     private SharedPreferences preferences;
     private boolean resumed, loading, pending, observing, demo;
     private long lastLoad;
@@ -68,7 +70,13 @@ public final class CalendarActivity extends Activity {
             faceContext = createConfigurationContext(override);
         }
         face = new ClockFace(faceContext);
-        setContentView(face);
+        companions = new CompanionView(faceContext);
+        FrameLayout display = new FrameLayout(this);
+        display.addView(face, new FrameLayout.LayoutParams(-1, -1));
+        display.addView(companions, new FrameLayout.LayoutParams(-1, -1));
+        face.addOnLayoutChangeListener((view, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom) ->
+                companions.setArea(face.companionArea()));
+        setContentView(display);
         face.setOnClickListener(view -> menu());
         IntentFilter timeFilter = new IntentFilter();
         timeFilter.addAction(Intent.ACTION_TIME_CHANGED);
@@ -102,10 +110,12 @@ public final class CalendarActivity extends Activity {
         observeIfAllowed();
         load();
         scheduleMinute();
+        if (!demo) companions.start();
     }
 
     @Override protected void onPause() {
         resumed = false;
+        companions.stop();
         handler.removeCallbacks(minute);
         handler.removeCallbacks(changed);
         handler.removeCallbacks(renewDisplay);

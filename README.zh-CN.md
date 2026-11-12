@@ -20,6 +20,8 @@
 
 安装后允许读取日历，轻触画面可选择日历来源、查看同步说明、切换显示方向或退出。朝夕没有联网权限，不接触云端账号密码，不修改日程，不包含统计或广告服务。
 
+日期旁住着一只像素猫和一只垂耳狗，会自动休息、各玩各的、一起看书、玩球，偶尔轻轻打闹，无需点击场景按钮。打开约 5 秒后开始一段活动，每段播完后静止 5–10 分钟，再按权重随机选择；安静的场景更常见，活动场景不连续重复，夜间只休息或看书。黑白像素动画以每秒 2 帧短暂播放，离开应用后停止。
+
 分组依据是设备中的真实日历 ID，标题使用日历名称，各组按最早一项后续安排排序。应用不会根据日程标题推断所属人。如果同步应用把多个人的安排导入同一本日历，它们在这里仍属于同一组；需要区分时，应在来源日历或同步配置中拆分。
 
 ## 电池、离线与 BOOX
@@ -68,6 +70,7 @@ flowchart LR
 | [`Agenda`](app/src/main/java/local/boox/calendarclock/Agenda.java) | 保存日历列表、事件、查询窗口和读取状态的内存快照。 |
 | [`ClockLayout`](app/src/main/java/local/boox/calendarclock/ClockLayout.java) | 计算横屏、竖屏下日期、今日和后续安排的区域。 |
 | [`ClockFace`](app/src/main/java/local/boox/calendarclock/ClockFace.java) | 绘制日期、事件状态和日历分组，处理等比例缩放、换行和截断。 |
+| [`CompanionView`](app/src/main/java/local/boox/calendarclock/CompanionView.java) / [`CompanionSchedule`](app/src/main/java/local/boox/calendarclock/CompanionSchedule.java) | 在独立图层绘制内置像素猫狗，按时段选择场景，与日历刷新独立运行。 |
 
 时钟在每个整分钟之后重绘。日历数据在应用回到前台、选择日历或设备时间变化后重新读取；检测到跨日或时区变化时也会重读。系统日历变更通知合并等待 500 毫秒后读取，另有每 15 分钟一次的补查。读取进行中收到的新请求会合并成一次后续读取，时钟重绘和 BOOX 唤醒续期独立运行。
 
@@ -75,7 +78,7 @@ flowchart LR
 
 日程保留在系统日历和应用的内存快照中；应用设置只保存显示方向、排除的日历 ID 和权限提示状态。读取失败会显示错误，但应用无法诊断或修复上游同步故障。
 
-测试覆盖日期边界、夏令时、全天事件、布局边界及前后台电源行为，也覆盖模拟运行两小时的 BOOX 续期和切后台时取消续期。模拟时间不能代替厂商固件实测。Robolectric 安卓原生渲染测试会在 `app/build/outputs/previews/` 生成中英文、竖屏和宽屏预览，全部使用虚构数据。
+测试覆盖日期边界、夏令时、全天事件、布局边界、猫狗场景调度与静止间隔及前后台电源行为，也覆盖模拟运行两小时的 BOOX 续期和切后台时取消续期。模拟时间不能代替厂商固件实测。Robolectric 安卓原生渲染测试会在 `app/build/outputs/previews/` 生成中英文、竖屏和宽屏预览，全部使用虚构数据。
 
 [竖屏预览](docs/portrait.png) · [宽屏预览](docs/wide-landscape.png)
 
