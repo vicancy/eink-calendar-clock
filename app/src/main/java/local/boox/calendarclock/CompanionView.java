@@ -73,9 +73,8 @@ final class CompanionView extends View {
         if (!active || destination.isEmpty()) return;
         if (animating) {
             frame++;
+            animating = frame < scene.frames - 1;
             invalidate(destination);
-            if (frame < scene.frames - 1) postDelayed(advance, FRAME_MS);
-            else { animating = false; postDelayed(advance, schedule.restMillis()); }
         } else {
             CompanionSchedule.Scene chosen = schedule.next(LocalTime.now().getHour(), opening);
             opening = false;
@@ -84,8 +83,8 @@ final class CompanionView extends View {
             frame = 0;
             if (changed) invalidate(destination);
             animating = scene.frames > 1;
-            postDelayed(advance, animating ? FRAME_MS : schedule.restMillis());
         }
+        postDelayed(advance, animating ? FRAME_MS : schedule.restMillis());
     }
 
     @Override protected void onDraw(Canvas canvas) {

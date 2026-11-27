@@ -188,8 +188,14 @@ final class ClockFace extends View {
             if (!ended) { paint.setColor(INK); canvas.drawRect(box.left, top, box.left + 8, top + row - 30, paint); }
             String range = event.allDay ? s(R.string.all_day) : time(event.begin, now.getZone()) + " — " + time(event.end, now.getZone());
             paragraph(canvas, range, roomy ? 52 : 34, box.left + 26, top, box.width() - 26, 1, true, color);
-            paragraph(canvas, event.title, roomy ? 46 : 36, box.left + 26, top + (roomy ? 91 : 48),
-                    box.width() - 26, roomy ? 3 : 2, true, color);
+            float titleTop = top + (roomy ? 91 : 48);
+            StaticLayout title = paragraph(event.title, roomy ? 46 : 36, box.width() - 26,
+                    roomy ? 3 : 2, true, color);
+            // Reserve a gap above the calendar source, even when a title wraps.
+            while (roomy && title.getLineCount() > 1 && titleTop + title.getHeight() > top + row - 74) {
+                title = paragraph(event.title, 46, box.width() - 26, title.getLineCount() - 1, true, color);
+            }
+            drawParagraph(canvas, title, box.left + 26, titleTop);
             if (roomy) {
                 String source = event.source == null ? s(R.string.calendar) : event.source;
                 paragraph(canvas, source, 26, box.left + 26, top + row - 62, box.width() - 26, 1, false, color);
